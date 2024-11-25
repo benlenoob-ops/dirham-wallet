@@ -1,0 +1,111 @@
+/* Style général */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e0f7fa; /* Bleu clair */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+header {
+    background-color: #0288d1; /* Bleu agréable */
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+main {
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    margin: auto;
+}
+
+footer {
+    background-color: #0288d1;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+section {
+    margin-top: 2rem;
+}
+
+/* Style du formulaire et des boutons */
+input, button {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border: 2px solid #0288d1;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+input:focus, button:focus {
+    outline: none;
+    border-color: #81d4fa; /* Bleu clair au focus */
+}
+
+button {
+    background-color: #0288d1;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    border: none;
+}
+
+button:hover {
+    background-color: #81d4fa; /* Bleu clair au hover */
+}
+
+a {
+    color: #0288d1;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Style du portefeuille */
+#wallet {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+}
+
+#balance {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0288d1;
+}
+
+.btn {
+    background-color: #0288d1;
+    color: white;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+.btn:hover {
+    background-color: #81d4fa;
+}
+
+/* Style de la section d'envoi */
+#send-dirhams {
+    margin-top: 2rem;
+}

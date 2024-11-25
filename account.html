@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portefeuille - Dirham Wallet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Mon Portefeuille Dirham</h1>
+    </header>
+    <main>
+        <div id="wallet">
+            <h2>Solde : <span id="balance">0</span> Dirhams</h2>
+            <button id="add-dirhams" class="btn">Ajouter des Dirhams</button>
+            <button id="withdraw-dirhams" class="btn">Retirer des Dirhams</button>
+        </div>
+        
+        <section id="send-dirhams">
+            <h3>Envoyer des Dirhams</h3>
+            <label for="recipient">Destinataire (email) :</label>
+            <input type="email" id="recipient" required>
+            <label for="amount">Montant à envoyer :</label>
+            <input type="number" id="amount" required>
+            <button id="send-btn" class="btn">Envoyer</button>
+        </section>
+
+        <p><a href="logout.html" class="btn">Se déconnecter</a></p>
+    </main>
+    <footer>
+        <p>&copy; 2024 Dirham Wallet. Tous droits réservés.</p>
+    </footer>
+
+    <script src="account.js"></script>
+</body>
+</html>
