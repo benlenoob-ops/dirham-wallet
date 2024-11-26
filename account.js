@@ -86,3 +86,59 @@ function updateBalance() {
         balanceElement.textContent = "Solde inconnu";
     }
 }
+
+// Fonction pour ajouter des Dirhams (uniquement pour benreinermann@gmail.com)
+document.getElementById('add-dirhams').addEventListener('click', function() {
+    const currentUser = localStorage.getItem('currentUser');  // Utilisateur connecté
+
+    if (currentUser !== "benreinermann@gmail.com") {
+        alert("Vous n'avez pas les droits pour ajouter des Dirhams.");
+        return;
+    }
+
+    const amount = parseInt(prompt("Combien de dirhams voulez-vous ajouter ?"));
+
+    if (isNaN(amount) || amount <= 0) {
+        alert("Montant invalide.");
+        return;
+    }
+
+    // Charger les utilisateurs depuis localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (users[currentUser]) {
+        users[currentUser].dirhams += amount;  // Ajouter des Dirhams à l'utilisateur
+        localStorage.setItem('users', JSON.stringify(users));
+        alert(`Vous avez ajouté ${amount} Dirhams.`);
+    }
+
+    updateBalance();  // Mise à jour du solde
+});
+
+// Fonction pour retirer des Dirhams (uniquement pour benreinermann@gmail.com)
+document.getElementById('withdraw-dirhams').addEventListener('click', function() {
+    const currentUser = localStorage.getItem('currentUser');  // Utilisateur connecté
+
+    if (currentUser !== "benreinermann@gmail.com") {
+        alert("Vous n'avez pas les droits pour retirer des Dirhams.");
+        return;
+    }
+
+    const amount = parseInt(prompt("Combien de dirhams voulez-vous retirer ?"));
+
+    if (isNaN(amount) || amount <= 0) {
+        alert("Montant invalide.");
+        return;
+    }
+
+    // Charger les utilisateurs depuis localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (users[currentUser] && users[currentUser].dirhams >= amount) {
+        users[currentUser].dirhams -= amount;  // Retirer des Dirhams de l'utilisateur
+        localStorage.setItem('users', JSON.stringify(users));
+        alert(`Vous avez retiré ${amount} Dirhams.`);
+    } else {
+        alert("Vous n'avez pas assez de Dirhams pour retirer ce montant.");
+    }
+
+    updateBalance();  // Mise à jour du solde
+});
