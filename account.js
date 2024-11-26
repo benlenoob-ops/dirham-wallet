@@ -93,7 +93,7 @@ function loadUsers() {
         if (user !== localStorage.getItem("currentUser")) {
             const option = document.createElement("option");
             option.value = user;
-            option.textContent = users[user].username;
+            option.textContent = users[user].username; // Afficher le nom d'utilisateur
             recipientSelect.appendChild(option);
         }
     }
