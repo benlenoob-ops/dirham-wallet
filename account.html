@@ -13,27 +13,21 @@
     <main>
         <div id="wallet">
             <h2>Solde : <span id="balance">0</span> Dirhams</h2>
-            
-            <!-- Ajout et retrait de Dirhams -->
-            <div id="transaction-section">
-                <button id="add-dirhams" class="btn">Ajouter des Dirhams</button>
-                <button id="withdraw-dirhams" class="btn">Retirer des Dirhams</button>
-            </div>
-            
-            <!-- Envoi de Dirhams -->
-            <section id="send-dirhams">
-                <h3>Envoyer des Dirhams</h3>
-                <label for="recipient">Destinataire (email) :</label>
-                <select id="recipient">
-                    <!-- Les utilisateurs seront ajoutés ici dynamiquement -->
-                </select>
-                <label for="amount">Montant à envoyer :</label>
-                <input type="number" id="amount" required>
-                <button id="send-btn" class="btn">Envoyer</button>
-            </section>
-
+            <button id="add-dirhams" class="btn">Ajouter des Dirhams</button>
+            <button id="withdraw-dirhams" class="btn">Retirer des Dirhams</button>
         </div>
         
+        <section id="send-dirhams">
+            <h3>Envoyer des Dirhams</h3>
+            <label for="recipient">Destinataire :</label>
+            <select id="recipient">
+                <option value="">Choisir un destinataire</option>
+            </select>
+            <label for="amount">Montant à envoyer :</label>
+            <input type="number" id="amount" required min="1">
+            <button id="send-btn" class="btn">Envoyer</button>
+        </section>
+
         <p><a href="logout.html" class="btn">Se déconnecter</a></p>
     </main>
     <footer>
