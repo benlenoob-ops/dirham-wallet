@@ -1,144 +1,127 @@
-window.onload = function() {
-    updateBalance();
-    displayUsers();
-};
+// Fonction pour mettre à jour le solde de l'utilisateur connecté
+function updateBalance() {
+    const loggedInUser = localStorage.getItem("currentUser"); // Récupérer l'utilisateur connecté
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    
+    if (users[loggedInUser]) {
+        document.getElementById("balance").textContent = users[loggedInUser].dirhams + " Dirhams";
+    }
+}
 
-// Fonction pour afficher la liste des utilisateurs
-function displayUsers() {
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const userList = document.getElementById('user-list');
-    userList.innerHTML = '';  // Réinitialise la liste
+// Fonction pour ajouter des Dirhams
+function addDirhams(amount) {
+    const loggedInUser = localStorage.getItem("currentUser");
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
 
-    // Parcours des utilisateurs et ajout à la liste
-    for (let email in users) {
-        if (users.hasOwnProperty(email)) {
-            const user = users[email];
-            const li = document.createElement('li');
-            li.textContent = user.username;  // Affiche le nom d'utilisateur
-            li.addEventListener('click', function() {
-                // Demande du montant à envoyer
-                const amount = prompt(`Combien de dirhams souhaitez-vous envoyer à ${user.username} ?`);
-                if (amount && !isNaN(amount) && amount > 0) {
-                    sendDirhams(user.email, parseInt(amount));  // Appel de la fonction d'envoi
-                } else {
-                    alert('Montant invalide.');
-                }
-            });
-            userList.appendChild(li);
+    // Vérifier que l'utilisateur existe et que c'est le bon utilisateur
+    if (users[loggedInUser] && loggedInUser === "benreinermann@gmail.com") {
+        users[loggedInUser].dirhams += amount;
+        localStorage.setItem("users", JSON.stringify(users));
+        updateBalance();
+        alert("Dirhams ajoutés avec succès !");
+    } else {
+        alert("Seul l'administrateur peut ajouter des Dirhams.");
+    }
+}
+
+// Fonction pour retirer des Dirhams
+function withdrawDirhams(amount) {
+    const loggedInUser = localStorage.getItem("currentUser");
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    // Vérifier que l'utilisateur existe et que c'est le bon utilisateur
+    if (users[loggedInUser] && loggedInUser === "benreinermann@gmail.com") {
+        if (users[loggedInUser].dirhams >= amount) {
+            users[loggedInUser].dirhams -= amount;
+            localStorage.setItem("users", JSON.stringify(users));
+            updateBalance();
+            alert("Dirhams retirés avec succès !");
+        } else {
+            alert("Vous n'avez pas assez de Dirhams.");
         }
+    } else {
+        alert("Seul l'administrateur peut retirer des Dirhams.");
     }
 }
 
 // Fonction pour envoyer des Dirhams
-function sendDirhams(recipientEmail, amount) {
-    const currentUser = localStorage.getItem('currentUser');  // Utilisateur connecté
+function sendDirhams() {
+    const loggedInUser = localStorage.getItem("currentUser");
+    const recipientEmail = document.getElementById("recipient").value.trim();
+    const amount = parseInt(document.getElementById("amount").value, 10);
 
-    // Charger les utilisateurs depuis localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
 
-    // Vérifications
-    if (!currentUser) {
-        alert("Vous devez être connecté pour effectuer une transaction.");
-        return;
-    }
-
+    // Validation de base
     if (!recipientEmail || isNaN(amount) || amount <= 0) {
-        alert("Veuillez entrer une adresse e-mail valide et un montant positif.");
+        alert("Veuillez entrer un email valide et un montant positif.");
         return;
     }
 
-    // Vérifier si l'utilisateur destinataire existe
+    // Vérifier que l'utilisateur et le destinataire existent
+    if (!users[loggedInUser]) {
+        alert("Utilisateur non trouvé.");
+        return;
+    }
     if (!users[recipientEmail]) {
-        alert("L'utilisateur destinataire n'existe pas.");
+        alert("Destinataire non trouvé.");
         return;
     }
 
-    // Vérifier que l'expéditeur a assez de Dirhams
-    const sender = users[currentUser];
-    if (sender.dirhams < amount) {
-        alert("Vous n'avez pas assez de dirhams pour cette transaction.");
+    // Vérifier que l'expéditeur a suffisamment de Dirhams
+    if (users[loggedInUser].dirhams < amount) {
+        alert("Solde insuffisant.");
         return;
     }
 
     // Effectuer la transaction
-    sender.dirhams -= amount;  // Décrémenter le solde de l'expéditeur
-    users[recipientEmail].dirhams += amount;  // Ajouter au solde du destinataire
+    users[loggedInUser].dirhams -= amount;
+    users[recipientEmail].dirhams += amount;
+    
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Vous avez envoyé " + amount + " Dirhams à " + recipientEmail);
 
-    // Sauvegarder les modifications dans localStorage
-    localStorage.setItem('users', JSON.stringify(users));
-
-    // Mise à jour de l'affichage du solde
     updateBalance();
-
-    alert(`Vous avez envoyé ${amount} dirhams à ${users[recipientEmail].username}.`);
 }
 
-// Fonction pour mettre à jour l'affichage du solde
-function updateBalance() {
-    const currentUser = localStorage.getItem('currentUser');  // Utilisateur connecté
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
+// Ajouter les utilisateurs à la liste de destinataires
+function loadUsers() {
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    const recipientSelect = document.getElementById("recipient");
 
-    const balanceElement = document.getElementById('balance');
-
-    if (currentUser && users[currentUser]) {
-        balanceElement.textContent = `${users[currentUser].dirhams} Dirhams`;
-    } else {
-        balanceElement.textContent = "Solde inconnu";
+    for (const user in users) {
+        if (user !== localStorage.getItem("currentUser")) {
+            const option = document.createElement("option");
+            option.value = user;
+            option.textContent = users[user].username;
+            recipientSelect.appendChild(option);
+        }
     }
 }
 
-// Fonction pour ajouter des Dirhams (uniquement pour benreinermann@gmail.com)
-document.getElementById('add-dirhams').addEventListener('click', function() {
-    const currentUser = localStorage.getItem('currentUser');  // Utilisateur connecté
-
-    if (currentUser !== "benreinermann@gmail.com") {
-        alert("Vous n'avez pas les droits pour ajouter des Dirhams.");
-        return;
-    }
-
-    const amount = parseInt(prompt("Combien de dirhams voulez-vous ajouter ?"));
-
-    if (isNaN(amount) || amount <= 0) {
-        alert("Montant invalide.");
-        return;
-    }
-
-    // Charger les utilisateurs depuis localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    if (users[currentUser]) {
-        users[currentUser].dirhams += amount;  // Ajouter des Dirhams à l'utilisateur
-        localStorage.setItem('users', JSON.stringify(users));
-        alert(`Vous avez ajouté ${amount} Dirhams.`);
-    }
-
-    updateBalance();  // Mise à jour du solde
-});
-
-// Fonction pour retirer des Dirhams (uniquement pour benreinermann@gmail.com)
-document.getElementById('withdraw-dirhams').addEventListener('click', function() {
-    const currentUser = localStorage.getItem('currentUser');  // Utilisateur connecté
-
-    if (currentUser !== "benreinermann@gmail.com") {
-        alert("Vous n'avez pas les droits pour retirer des Dirhams.");
-        return;
-    }
-
-    const amount = parseInt(prompt("Combien de dirhams voulez-vous retirer ?"));
-
-    if (isNaN(amount) || amount <= 0) {
-        alert("Montant invalide.");
-        return;
-    }
-
-    // Charger les utilisateurs depuis localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    if (users[currentUser] && users[currentUser].dirhams >= amount) {
-        users[currentUser].dirhams -= amount;  // Retirer des Dirhams de l'utilisateur
-        localStorage.setItem('users', JSON.stringify(users));
-        alert(`Vous avez retiré ${amount} Dirhams.`);
+// Ajout des événements
+document.getElementById("add-dirhams").addEventListener("click", function() {
+    const amount = parseInt(prompt("Combien de Dirhams voulez-vous ajouter ?"), 10);
+    if (!isNaN(amount) && amount > 0) {
+        addDirhams(amount);
     } else {
-        alert("Vous n'avez pas assez de Dirhams pour retirer ce montant.");
+        alert("Montant invalide.");
     }
-
-    updateBalance();  // Mise à jour du solde
 });
+
+document.getElementById("withdraw-dirhams").addEventListener("click", function() {
+    const amount = parseInt(prompt("Combien de Dirhams voulez-vous retirer ?"), 10);
+    if (!isNaN(amount) && amount > 0) {
+        withdrawDirhams(amount);
+    } else {
+        alert("Montant invalide.");
+    }
+});
+
+document.getElementById("send-btn").addEventListener("click", sendDirhams);
+
+// Charger les utilisateurs et mettre à jour le solde à la connexion
+window.onload = function () {
+    loadUsers();
+    updateBalance();
+};
