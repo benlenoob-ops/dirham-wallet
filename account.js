@@ -2,7 +2,7 @@
 function updateBalance() {
     const loggedInUser = localStorage.getItem("currentUser"); // Récupérer l'utilisateur connecté
     const users = JSON.parse(localStorage.getItem("users") || "{}");
-    
+
     if (users[loggedInUser]) {
         document.getElementById("balance").textContent = users[loggedInUser].dirhams + " Dirhams";
     }
